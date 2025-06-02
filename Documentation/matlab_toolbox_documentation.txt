@@ -1,0 +1,189 @@
+
+MATLAB Toolbox Documentation: Evolutionary Games Toolbox
+-------------------------------------------------------------
+
+Function: TourTheFit
+--------------------
+Syntax:
+    [POP, BST, FIT] = TourTheFit(B, Strategies, POP0, T, J)
+
+Description:
+    Performs theoretical analysis of the Axelrod tournament by computing the population
+    of each strategy, their fitness values and the best-performing strategies in each generation.
+    Uses the fitness dynamics algorithm described in [Mathieu et al., 1999].
+
+Inputs:
+    B         	– 2×2 payoff matrix
+    Strategies	– Cell array of strategy names
+    POP0      	– Initial population vector
+    T         	– Number of rounds per match
+    J         	– Number of generations
+
+Outputs:
+    POP – Population matrix (#strategies × generations)
+    BST – Best strategy/strategies per generation
+    FIT – Fitness values per strategy and generation
+
+-------------------------------------------------------------
+
+Function: TourSimFit
+--------------------
+Syntax:
+    [POP, BST, FIT] = TourSimFit(B, Strategies, POP0, T, J)
+
+Description:
+    Partially simulates the Axelrod tournament using precomputed payoffs rather than full match simulations.
+    Uses fitness-based evolutionary dynamics.
+
+(Inputs/Outputs same as TourTheFit)
+
+-------------------------------------------------------------
+
+Function: TourTheFit_Integer_Populations
+----------------------------------------
+Syntax:
+    [POP, BST, FIT] = TourTheFit_Integer_Populations(B, Strategies, POP0, T, J)
+
+Description:
+    Same as TourTheFit, but ensures integer strategy populations in each generation using a redistribution algorithm.
+
+-------------------------------------------------------------
+
+Function: TourSimImi
+--------------------
+Syntax:
+    [POP, BST] = TourSimImi(B, Strategies, POP0, K, T, J)
+
+Description:
+    Partially simulates the Axelrod tournament using imitation dynamics. 
+    Each generation, K players switch to a best-performing strategy.
+
+Inputs:
+    K – Number of imitators per generation
+    (Other inputs same as TourTheFit)
+
+Outputs:
+    POP – Population matrix
+    BST – Best strategies per generation
+
+-------------------------------------------------------------
+
+Function: TourTheImi
+--------------------
+Syntax:
+    P = TourTheImi(B, Strategies, POP0, K, T, J)
+
+Description:
+    Computes the transition probability matrix between population states using imitation dynamics.
+
+Output:
+    P – Transition probability matrix
+
+-------------------------------------------------------------
+
+Function: axel
+--------------
+Syntax:
+    scores = axel(B, Strategies, Pop, T)
+
+Description:
+    Simulates a full round-robin Axelrod tournament. All players play once with every other.
+
+Output:
+    scores – Vector of player scores
+
+-------------------------------------------------------------
+
+Function: axel_partial
+----------------------
+Description:
+    Like axel, but uses precomputed match payoffs.
+
+-------------------------------------------------------------
+
+Function: compositions
+----------------------
+Syntax:
+    comps = compositions(n, k)
+
+Description:
+    Returns all population compositions of n players over k strategies.
+
+-------------------------------------------------------------
+
+Function: ComputePayoffMatrix
+-----------------------------
+Syntax:
+    V = ComputePayoffMatrix(Strategies, B, T)
+
+Description:
+    Computes the payoff matrix between all strategy pairs.
+
+-------------------------------------------------------------
+
+Function: get_strategy_move
+---------------------------
+Syntax:
+    move = get_strategy_move(player_strategy, history, player_id)
+
+Description:
+    Determines the move ('C' or 'D') a player makes given their strategy and history.
+
+-------------------------------------------------------------
+
+Function: play_match
+--------------------
+Syntax:
+    [score1, score2] = play_match(player1, player2, B, T)
+
+Description:
+    Simulates a full match and returns the players' scores.
+
+-------------------------------------------------------------
+
+Function: pop_redistribute
+--------------------------
+Syntax:
+    int_pop = pop_redistribute(proportions, total)
+
+Description:
+    Converts strategy proportions into integer counts that sum to the given total.
+
+-------------------------------------------------------------
+
+Function: hypergeometric_pmf
+----------------------------
+Syntax:
+    p = hypergeometric_pmf(counts, population)
+
+Description:
+    Multivariate hypergeometric PMF — probability of selecting players without replacement.
+
+-------------------------------------------------------------
+
+Function: multinomial_pmf
+-------------------------
+Syntax:
+    p = multinomial_pmf(counts, probabilities)
+
+Description:
+    Multinomial PMF — probability of outcomes from repeated selections with replacement.
+
+-------------------------------------------------------------
+
+Implemented Strategies
+----------------------
+Each strategy returns 'C' or 'D':
+
+- All-C       : Always cooperates
+- All-D       : Always defects
+- (CD)*       : Alternates between cooperation and defection
+- (CCCCD)*    : Defects after four cooperations
+- (CCD)*      : Defects after two cooperations
+- (DDC)*      : Cooperates after two defections
+- TitForTat   : Cooperates initially, then copies opponent's last move
+- Soft-Majo   : Cooperates initially, then uses opponent's majority move
+- Prober      : Plays 'D'-'C'-'C'; if opponent cooperated on  rounds 2 and 3, defects forever; else uses TitForTat
+- Gradual     : Punishes N-th defection with N times 'D', then two C's; cooperates otherwise
+
+-------------------------------------------------------------
